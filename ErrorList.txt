@@ -1,0 +1,15 @@
+Description of Exit:
+	0: Success
+
+function main:
+	1: Arguments error
+	2: Cannot create socket
+	3: Cannot connect to server
+	
+function recv_msg:
+	4: Connection closed by host
+
+function authenticate:
+	5: Invalid User
+	6: Incorrect login
+
