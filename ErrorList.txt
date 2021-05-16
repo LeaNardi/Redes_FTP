@@ -13,3 +13,7 @@ function authenticate:
 	5: Invalid User
 	6: Incorrect login
 
+function quit
+	7: Incorrect logout
+	
+

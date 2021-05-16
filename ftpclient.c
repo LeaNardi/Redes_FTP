@@ -108,7 +108,7 @@ void authenticate(int sd) {
     free(input);
 
     // wait for answer and process it and check for errors
-    if(!recv_msg(sd, 331, NULL))
+    if(recv_msg(sd, 530, NULL))
         errx(6, "Incorrect login");
 
 }
@@ -118,7 +118,7 @@ void authenticate(int sd) {
  * sd: socket descriptor
  * file_name: file name to get from the server
  **/
-void get(int sd, char *file_name) {
+void get(int sd, char *file_name) {//por ahora no
     char desc[BUFSIZE], buffer[BUFSIZE];
     int f_size, recv_s, r_size = BUFSIZE;
     FILE *file;
@@ -151,9 +151,10 @@ void get(int sd, char *file_name) {
  **/
 void quit(int sd) {
     // send command QUIT to the client
-
+    send_msg(sd, "QUIT", NULL);
     // receive the answer from the server
-
+    if(!recv_msg(sd, 221, NULL))
+        errx(7, "Incorrect logout");
 }
 
 /**
@@ -171,8 +172,8 @@ void operate(int sd) {
         op = strtok(input, " ");
         // free(input);
         if (strcmp(op, "get") == 0) {
-            param = strtok(NULL, " ");
-            get(sd, param);
+            //param = strtok(NULL, " ");
+            //get(sd, param);
         }
         else if (strcmp(op, "quit") == 0) {
             quit(sd);
@@ -193,8 +194,9 @@ bool direccion_IP(char *string){
     char *token;
     bool verificacion = true;
     int contador=0,i;
-
-    token = strtok(string,".");
+    token = (char *) malloc(strlen(string)*sizeof(char));
+    strcpy(token, string);
+    token = strtok(token,".");
 
     while(token!=NULL){
         contador++;
@@ -207,6 +209,7 @@ bool direccion_IP(char *string){
         token=strtok(NULL,".");
     }
     if(contador!=4) verificacion = false;
+    free(token);
 
     return verificacion;
 }
@@ -247,6 +250,7 @@ int main (int argc, char *argv[]) {
     if (sd < 0) {
         errx(2, "Cannot create socket");
     }
+
     // set socket data
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = inet_addr(argv[1]); // server address
@@ -260,9 +264,10 @@ int main (int argc, char *argv[]) {
     // if receive hello proceed with authenticate and operate if not warning
     //construir recvmsg
     if(recv_msg(sd, 220, NULL)) {
+        //printf("Llego hasta acá\n");
         authenticate(sd);
-        printf("Operation: ");
-
+        operate(sd);
+        //printf("Llego hasta acá\n");
 
 
     } else{
