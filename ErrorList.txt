@@ -4,16 +4,20 @@ Description of Exit:
 function main:
 	1: Arguments error
 	2: Cannot create socket
-	3: Cannot connect to server
+	3: Error on connect
+	4: Cannot bind socket
+	5: Error on listen
+	6: Error on accept
+	
 	
 function recv_msg:
-	4: Connection closed by host
+	7: Connection closed by host
 
 function authenticate:
-	5: Invalid User
-	6: Incorrect login
+	8: Invalid User
+	9: Incorrect login
 
 function quit
-	7: Incorrect logout
+	10: Incorrect logout
 	
 
